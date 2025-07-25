@@ -12,11 +12,11 @@ def get_files_info(working_directory, directory="."):
             return f'Error: "{directory}" is not a directory'
 
         list_of_files = os.listdir(abs_path)
-        dir_info = ""
+        dir_info = []
         for item in list_of_files:
             abs_path_item = os.path.join(full_path,item)
-            dir_info += f"- {item}: file_size={os.path.getsize(abs_path_item)}, is_dir={os.path.isdir(abs_path_item)}\n" 
-        return dir_info
+            dir_info.append(f"- {item}: file_size={os.path.getsize(abs_path_item)}, is_dir={os.path.isdir(abs_path_item)}")
+        return "\n".join(dir_info)
     except Exception as e:
         return f"Error: {e}"
 
