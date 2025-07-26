@@ -1,6 +1,7 @@
 from functions.get_files_info import get_files_info
 from functions.write_file import write_file
 from functions.get_file_content import get_file_content
+from functions.run_python import run_python_file
 
 
 def test():
@@ -53,7 +54,33 @@ def file_content_test():
     result = get_file_content("calculator", "pkg/does_not_exist.py")
     print("Result for 'pkg/does_not_exist.py' file:")
     print(result)
+
+
+
+def run_test():
+    result = run_python_file("calculator", "main.py")
+    print("Result for main.py:")
+    print(result)
+    print("")
+
+    result = run_python_file("calculator", "main.py", ["3 + 5"])
+    print("Result for main.py [3+5]")
+    print(result)
+
+    result = run_python_file("calculator", "tests.py")
+    print("Results for tests.py")
+    print(result)
+
+    result = run_python_file("calculator", "../main.py")
+    print("Result for ..main.py")
+    print(result)
+
+    result = run_python_file("calculator", "nonexistent.py")
+    print("Result for nonexistent.py")
+    print(result)
+
 if __name__ == "__main__":
     #test()
     #file_content_test()
-    write_file_test()
+    #write_file_test()
+    run_test()
