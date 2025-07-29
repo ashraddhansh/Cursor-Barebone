@@ -35,27 +35,41 @@ def main():
         messages = [
         types.Content(role="user", parts=[types.Part(text=user_prompt)]),
         ]
-        output = client.models.generate_content(
-                model = "gemini-2.0-flash-001",
-                contents=messages,
-                config=types.GenerateContentConfig(
-                    tools=[available_functions],
-                    system_instruction=system_prompt)
-                )
+        for i in range(20):
+            try:
+                output = client.models.generate_content(
+                        model = "gemini-2.0-flash-001",
+                        contents=messages,
+                        config=types.GenerateContentConfig(
+                            tools=[available_functions],
+                            system_instruction=system_prompt)
+                        )
+            except Exception as e:
+                print(f"Error: model.generate_content failed: {e}")
 
-        if output.function_calls:
-            for function_call_part in output.function_calls:
-                function_call_result = call_function(function_call_part,verbose="--verbose" in sys.argv)
+            for candidate in output.candidates:
+                messages.append(candidate.content)
 
-                try:
-                    response = function_call_result.parts[0].function_response.response
-                except (AttributeError, IndentationError):
-                    raise RuntimeError("Fatal: No function response found in tool output")
+            if output.function_calls:
+                for function_call_part in output.function_calls:
+                    function_call_result = call_function(function_call_part,verbose="--verbose" in sys.argv)
+                    messages.append(
+                            types.Content(
+                                role="tool",
+                                parts=[types.Part(function_response=function_call_result.parts[0].function_response)]
+                                )
+                            )
 
-                if "--verbose" in sys.argv:
-                    print(f"-> {response}")
-        if output.text:
-            print(output.text)
+                    try:
+                        response = function_call_result.parts[0].function_response.response
+                    except (AttributeError, IndentationError):
+                        raise RuntimeError("Fatal: No function response found in tool output")
+
+                    if "--verbose" in sys.argv:
+                        print(f"-> {response}")
+            if output.text and not output.function_calls:
+                print(output.text)
+                break
 
 
 
