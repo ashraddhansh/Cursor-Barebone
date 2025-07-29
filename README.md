@@ -10,7 +10,7 @@ It uses 4 basic functions to solve the problem specified by the user:
 - `run_python`: run the python code so agent can test the implemented solutions.
 - `write_file`: write the content provided by agent into a file.
 
-# Project Structure
+## Project Structure
 
 ```
 .
