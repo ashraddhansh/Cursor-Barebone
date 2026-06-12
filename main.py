@@ -62,7 +62,7 @@ def main():
 
                     try:
                         response = function_call_result.parts[0].function_response.response
-                    except (AttributeError, IndentationError):
+                    except (AttributeError):
                         raise RuntimeError("Fatal: No function response found in tool output")
 
                     if "--verbose" in sys.argv:
